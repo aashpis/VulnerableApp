@@ -9,14 +9,13 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.Md4PasswordEncoder;
 
 /** Utility class for various password hashing algorithms. */
 public final class PasswordHashingUtils {
 
     private static final String HASH_SEPARATOR = ":";
     private static final String HASH_ALGORITHM = "SHA-256";
-    private static final Md4PasswordEncoder MD4_ENCODER = new Md4PasswordEncoder();
+    private static final int bcryptWorkFactor = 12;
 
     private PasswordHashingUtils() {}
 
@@ -38,15 +37,15 @@ public final class PasswordHashingUtils {
         return md4Hash(rawPassword).equals(md4Hash);
     }
 
-    public static boolean isValidSaltedSha256(String rawPassword, String storedPassword) {
-        if (storedPassword == null || rawPassword == null) {
+    public static boolean isValidSaltedSha256(String rawPassword, String saltedSha256Hash) {
+        if (saltedSha256Hash == null || rawPassword == null) {
             return false;
         }
 
-        String[] saltAndHash = storedPassword.split(HASH_SEPARATOR, 2);
+        String[] saltAndHash = saltedSha256Hash.split(HASH_SEPARATOR, 2);
         if (saltAndHash.length != 2) {
             // Backward compatibility for old plaintext test data.
-            return storedPassword.equals(rawPassword);
+            return saltedSha256Hash.equals(rawPassword);
         }
 
         String calculatedHash = sha256Hex(saltAndHash[0], rawPassword);
@@ -59,25 +58,24 @@ public final class PasswordHashingUtils {
             byte[] digest =
                     messageDigest.digest((salt + rawPassword).getBytes(StandardCharsets.UTF_8));
             return bytesToHex(digest);
-        } catch (NoSuchAlgorithmException exception) {
-            throw new IllegalStateException("Failed to compute password hash", exception);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("Failed to compute password hash", e);
         }
     }
 
-    public static String bCryptHash(int strength, String rawPassword) {
-        if (4 > strength || strength > 31) {
-            throw new IllegalArgumentException("Bcrypt strength must be between 4 and 31");
-        }
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(strength);
+
+    public static int getbCryptWorkFactor() {
+        return bcryptWorkFactor;
+    }
+
+    public static String bCryptHash(String rawPassword) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(bcryptWorkFactor);
         return encoder.encode(rawPassword);
     }
 
-    public static boolean isValidBcrypt(int strength, String rawPassword, String storedPassword) {
-        if (4 > strength || strength > 31) {
-            throw new AssertionError("Bcrypt strength must be between 4 and 31");
-        }
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(strength);
-        return encoder.matches(rawPassword, storedPassword);
+    public static boolean isValidBcrypt(String rawPassword, String bcryptHash) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(bcryptWorkFactor);
+        return encoder.matches(rawPassword, bcryptHash);
     }
 
     /**
