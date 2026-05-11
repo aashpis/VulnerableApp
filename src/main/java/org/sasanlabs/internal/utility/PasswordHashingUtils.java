@@ -3,8 +3,11 @@ package org.sasanlabs.internal.utility;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.Security;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.Md4PasswordEncoder;
 
@@ -17,8 +20,22 @@ public final class PasswordHashingUtils {
 
     private PasswordHashingUtils() {}
 
+    // Bouncy Castle is used for unsalted hashing, rather than Spring Security which is always salted
     public static String md4Hash(String rawPassword) {
-        return MD4_ENCODER.encode(rawPassword);
+        Security.addProvider(new BouncyCastleProvider());
+
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("MD4");
+            messageDigest.update(rawPassword.getBytes(StandardCharsets.UTF_8));
+            byte[] digest = messageDigest.digest();
+            return bytesToHex(digest);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("MD4 Hash Algorithm Not Found", e);
+        }
+    }
+
+    public static boolean isValidMd4Hash(String rawPassword, String md4Hash){
+        return md4Hash(rawPassword).equals(md4Hash);
     }
 
     public static boolean isValidSaltedSha256(String rawPassword, String storedPassword) {
