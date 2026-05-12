@@ -26,7 +26,8 @@ class EncryptionUtilsTest {
     }
 
     @Test
-    @DisplayName("Custom Cipher: Should reverse the string and return a valid Base64 encoded string")
+    @DisplayName(
+            "Custom Cipher: Should reverse the string and return a valid Base64 encoded string")
     void customCipher_ReverseAndBase64() {
         String input = "password";
         String reversed = "drowssap";
@@ -63,7 +64,8 @@ class EncryptionUtilsTest {
     }
 
     @Test
-    @DisplayName("AES Encryption: Identical blocks should produce identical ciphertext blocks (ECB Vulnerability)")
+    @DisplayName(
+            "AES Encryption: Identical blocks should produce identical ciphertext blocks (ECB Vulnerability)")
     void encrypt_EcbPatternLeakage() {
         SecretKey key = EncryptionUtils.getKeyFromPassword("vulnerability-test");
 
