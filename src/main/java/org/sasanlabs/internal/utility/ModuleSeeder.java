@@ -1,9 +1,8 @@
 package org.sasanlabs.internal.utility;
 
 /**
- * Implement to seed the database for a module.
- * ModuleSeeders are auto-discovered and called by {@link DatabaseSeeder}
- * on application startup.
+ * Implement to seed the database for a module. ModuleSeeders are auto-discovered and called by
+ * {@link DatabaseSeeder} on application startup.
  */
 public interface ModuleSeeder {
 
