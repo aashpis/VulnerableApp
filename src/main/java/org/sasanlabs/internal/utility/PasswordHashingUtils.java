@@ -6,7 +6,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.Security;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -19,7 +18,7 @@ public final class PasswordHashingUtils {
 
     private PasswordHashingUtils() {}
 
-    // Bouncy Castle is used for unsalted hashing, rather than Spring Security which is always salted
+    // Bouncy Castle is used for unsalted hashing, Spring Security is always salted
     public static String md4Hash(String rawPassword) {
         Security.addProvider(new BouncyCastleProvider());
 
@@ -33,7 +32,7 @@ public final class PasswordHashingUtils {
         }
     }
 
-    public static boolean isValidMd4Hash(String rawPassword, String md4Hash){
+    public static boolean isValidMd4Hash(String rawPassword, String md4Hash) {
         return md4Hash(rawPassword).equals(md4Hash);
     }
 
@@ -62,7 +61,6 @@ public final class PasswordHashingUtils {
             throw new IllegalStateException("Failed to compute password hash", e);
         }
     }
-
 
     public static int getbCryptWorkFactor() {
         return bcryptWorkFactor;
