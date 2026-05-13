@@ -1,6 +1,7 @@
-package org.sasanlabs.internal.utility;
+package org.sasanlabs.configuration;
 
 import java.util.List;
+import org.sasanlabs.internal.utility.ModuleSeeder;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
