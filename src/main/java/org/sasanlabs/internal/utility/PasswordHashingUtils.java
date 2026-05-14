@@ -23,16 +23,15 @@ public final class PasswordHashingUtils {
     }
 
     public static String md4Hex(String rawPassword) {
-        return getHashAsHex(rawPassword,"MD4");
+        return getHashAsHex(rawPassword, "MD4");
     }
 
     public static String md5Hex(String rawPassword) {
-        return getHashAsHex(rawPassword,"MD5");
+        return getHashAsHex(rawPassword, "MD5");
     }
 
-
     public static String sha1Hex(String rawPassword) {
-        return getHashAsHex(rawPassword,"SHA-1");
+        return getHashAsHex(rawPassword, "SHA-1");
     }
 
     public static String getHashAsHex(String rawPassword, String hashAlgorithm) {
@@ -41,7 +40,7 @@ public final class PasswordHashingUtils {
             byte[] digest = messageDigest.digest(rawPassword.getBytes(StandardCharsets.UTF_8));
             return EncodingUtils.bytesToHex(digest);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException( hashAlgorithm + "Hash Algorithm Not Found", e);
+            throw new RuntimeException(hashAlgorithm + "Hash Algorithm Not Found", e);
         } catch (NoSuchProviderException e) {
             throw new RuntimeException("Security Provider Bouncy Castle not found", e);
         }
@@ -62,12 +61,11 @@ public final class PasswordHashingUtils {
         return saltAndHash[1].equalsIgnoreCase(calculatedHash);
     }
 
-
-    public static String sha256Hex(String salt, String rawPassword){
+    public static String sha256Hex(String salt, String rawPassword) {
         return getHashAsHex(salt + rawPassword, "SHA-256");
     }
 
-    public static String unsaltedSha256Hex(String rawPassword){
+    public static String unsaltedSha256Hex(String rawPassword) {
         return getHashAsHex(rawPassword, "SHA-256");
     }
 
@@ -108,7 +106,8 @@ public final class PasswordHashingUtils {
             System.arraycopy(keyBytes, 7, tmpKey2, 0, 7);
 
             // Encrypt the magic string "KGS!@#$%" using each key
-            return EncodingUtils.bytesToHex(lmDesEncrypt(tmpKey1)) + EncodingUtils.bytesToHex(lmDesEncrypt(tmpKey2));
+            return EncodingUtils.bytesToHex(lmDesEncrypt(tmpKey1))
+                    + EncodingUtils.bytesToHex(lmDesEncrypt(tmpKey2));
         } catch (Exception e) {
             throw new RuntimeException("LM Hashing failed", e);
         }
@@ -134,5 +133,4 @@ public final class PasswordHashingUtils {
         des.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key8, "DES"));
         return des.doFinal("KGS!@#$%".getBytes(StandardCharsets.US_ASCII));
     }
-
 }
