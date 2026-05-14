@@ -31,7 +31,7 @@ class EncryptionUtilsTest {
     void customCipher_ReverseAndBase64() {
         String input = "password";
         String reversed = "drowssap";
-        String expectedBase64 = Base64.getEncoder().encodeToString(reversed.getBytes());
+        String expectedBase64 = EncodingUtils.encodeBase64(reversed);
 
         assertEquals(expectedBase64, EncryptionUtils.customCipher(input));
     }
