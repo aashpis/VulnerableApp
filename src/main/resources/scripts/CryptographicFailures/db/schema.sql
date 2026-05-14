@@ -3,7 +3,6 @@ DROP TABLE IF EXISTS cryptographic_failures_vault;
 CREATE TABLE cryptographic_failures_vault (
     level INT PRIMARY KEY ,
     password VARCHAR(500),
-    salt VARCHAR(50),
     algorithm VARCHAR(50)
 );
 
