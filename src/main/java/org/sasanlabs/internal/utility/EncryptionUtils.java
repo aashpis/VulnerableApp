@@ -3,6 +3,7 @@ package org.sasanlabs.internal.utility;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Base64;
@@ -47,14 +48,15 @@ public class EncryptionUtils {
      */
     public static String customCipher(String rawPassword) {
         String reversed = new StringBuilder(rawPassword).reverse().toString();
-        return Base64.getEncoder().encodeToString(reversed.getBytes());
+        return EncodingUtils.encodeBase64(reversed);
     }
 
     public static SecretKey getKeyFromPassword(String password) {
         try {
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-            byte[] emptySalt = new byte[16];
-            KeySpec spec = new PBEKeySpec(password.toCharArray(), emptySalt, 1, 128);
+            byte[] salt = new byte[16];
+            new SecureRandom().nextBytes(salt);
+            KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 1, 128);
 
             return new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
