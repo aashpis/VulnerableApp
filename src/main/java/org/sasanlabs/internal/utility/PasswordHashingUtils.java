@@ -11,7 +11,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public final class PasswordHashingUtils {
 
     private static final String HASH_SEPARATOR = ":";
-    private static final String HASH_ALGORITHM = "SHA-256";
     private static final int bcryptWorkFactor = 12;
 
     private PasswordHashingUtils() {}
@@ -23,21 +22,14 @@ public final class PasswordHashingUtils {
         }
     }
 
-    public static String md4Hash(String rawPassword) {
+    public static String md4Hex(String rawPassword) {
         return getHashAsHex(rawPassword,"MD4");
     }
 
-    public static boolean isValidMd4Hash(String rawPassword, String md4Hash) {
-        return md4Hash(rawPassword).equals(md4Hash);
-    }
-
-    public static String md5Hash(String rawPassword) {
+    public static String md5Hex(String rawPassword) {
         return getHashAsHex(rawPassword,"MD5");
     }
 
-    public static boolean isValidMd5Hash(String rawPassword, String md5Hash) {
-        return  md5Hash(rawPassword).equals(md5Hash);
-    }
 
     public static String sha1Hex(String rawPassword) {
         return getHashAsHex(rawPassword,"SHA-1");
@@ -80,7 +72,6 @@ public final class PasswordHashingUtils {
     }
 
     // BC not used for bcrypt due to extra complexity for BC implementation
-
     public static int getbcryptWorkFactor() {
         return bcryptWorkFactor;
     }
