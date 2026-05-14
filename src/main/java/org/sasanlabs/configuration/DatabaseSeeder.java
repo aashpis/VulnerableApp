@@ -20,7 +20,7 @@ public class DatabaseSeeder {
         this.seeders = seeders;
     }
 
-    @EventListener(ApplicationReadyEvent.class) // Runs before app can take requests
+    @EventListener(ApplicationReadyEvent.class) // Runs when  application is ready
     public void seedAllModules() {
         System.out.println("Starting Global Database Seeding...");
 
