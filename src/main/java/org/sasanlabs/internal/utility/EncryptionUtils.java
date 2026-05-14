@@ -6,7 +6,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
-import java.util.Base64;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -51,11 +50,15 @@ public class EncryptionUtils {
         return EncodingUtils.encodeBase64(reversed);
     }
 
+    private static final byte[] salt = new byte[16];
+
+    static {
+        new SecureRandom().nextBytes(salt);
+    }
+
     public static SecretKey getKeyFromPassword(String password) {
         try {
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-            byte[] salt = new byte[16];
-            new SecureRandom().nextBytes(salt);
             KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 1, 128);
 
             return new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
