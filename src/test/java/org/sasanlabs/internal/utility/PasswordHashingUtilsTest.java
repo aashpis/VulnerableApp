@@ -10,12 +10,11 @@ class PasswordHashingUtilsTest {
     @Test
     @DisplayName("MD4: Should generate a correct unsalted hash")
     void md4Hash_CorrectHex() {
-        // Known MD4 hash for "password"
+        // Known MD4 hash for "password123"
         String expected = "fc7b71b67e964466cec486ab12f4b558";
         String actual = PasswordHashingUtils.md4Hex("password123");
         assertEquals(expected, actual);
     }
-
 
     @Test
     @DisplayName("MD5: Should generate a correct unsalted hash")
@@ -26,7 +25,6 @@ class PasswordHashingUtilsTest {
         assertEquals(expected, actual);
     }
 
-
     @Test
     @DisplayName("Unsalted SHA-256: Should generate a correct unsalted hash")
     void sha256Hash_CorrectHex() {
@@ -35,7 +33,6 @@ class PasswordHashingUtilsTest {
         String actual = PasswordHashingUtils.unsaltedSha256Hex("password");
         assertEquals(expected, actual);
     }
-
 
     @Test
     @DisplayName("SHA-256: Should correctly validate salted hashes with separator")
